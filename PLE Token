@@ -1,0 +1,73 @@
+pragma solidity ^0.8.2;
+
+contract Plethori {
+    // @dev 
+    // This is the native token of Plethori
+    // Token would be used as the singular staking mechanism. it is the required parameter set for the staking contract
+    // Once the values have been set and contract deloyed, they cannot be changed
+    //Token totalSupply is 100,000,000 [one hundred million]. additional 18 zeros are a requisite for solidity
+
+    mapping(address => uint) public balances;
+    mapping(address => mapping(address => uint)) public allowance;
+
+
+    // Token details
+    uint public totalSupply = 100000000000000000000000000;
+    string public name = "Plethori";
+    string public symbol = "PLE" ;
+    uint public decimals = 18;
+
+    event Transfer(address indexed from, address indexed to, uint value);
+    event Approval(address indexed owner, address indexed spender, uint value);
+
+
+    // The constructor sets the admin/owner which manages the tokens
+    constructor(){
+        balances[msg.sender] = totalSupply;
+    }
+
+
+    // Functions
+    // *balanceOf reads the balance of the specified address
+    function balanceOf(address owner) public view returns(uint){
+        return balances[owner];
+    }
+
+
+    // transfer sends token to entered address
+    function transfer(address to, uint value) public returns(bool){
+
+        // check if sender has enough tokens to send
+        require(balanceOf(msg.sender) >= value, 'balance too low');
+        balances[to] += value;
+        balances[msg.sender] -= value;
+        emit Transfer(msg.sender, to, value);
+        return true;
+    }
+
+
+    // allows a delegated smartcontract spend a specified amount of tokens on behalf of admin/owner
+    function transferFrom(address from, address to, uint value) public returns(bool){
+
+        // check if owner has enough tokens
+        require(balanceOf(from) >= value, 'balance too low');
+
+        // check if sender of the transaction is an apporved spender
+        require(allowance[from][msg.sender] >= value, 'allowance too low');
+
+        balances[to] += value;
+        balances[from] -= value;
+        emit Transfer(from, to, value);
+        return true;
+    }
+
+
+
+    // approves a delegated smartcontract to spend a specified amount of tokens on behalf of admin/owner
+    function approve(address spender, uint value) public returns(bool){
+        allowance[msg.sender][spender] = value;
+        emit Approval(msg.sender, spender, value);
+        return true;
+    }
+
+}
