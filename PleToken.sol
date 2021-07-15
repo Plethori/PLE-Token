@@ -178,12 +178,12 @@ contract ERC20 is Context, IERC20,Ownable {
     }
 
    
-   function increaseAllowance(address spender, uint256 addedValue) public virtual returns (bool) {
+   function increaseAllowance(address spender, uint256 addedValue) external virtual returns (bool) {
         _approve(_msgSender(), spender, _allowances[_msgSender()][spender] + addedValue);
         return true;
     }
    
-   function decreaseAllowance(address spender, uint256 subtractedValue) public virtual returns (bool) {
+   function decreaseAllowance(address spender, uint256 subtractedValue) external virtual returns (bool) {
         uint256 currentAllowance = _allowances[_msgSender()][spender];
         require(currentAllowance >= subtractedValue, "ERC20: decreased allowance below zero");
         unchecked {
