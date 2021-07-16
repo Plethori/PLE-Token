@@ -170,9 +170,9 @@ contract ERC20 is Context, IERC20,Ownable {
 
         uint256 currentAllowance = _allowances[sender][_msgSender()];
         require(currentAllowance >= amount, "ERC20: transfer amount exceeds allowance");
-        unchecked {
-            _approve(sender, _msgSender(), currentAllowance - amount);
-        }
+    
+        _approve(sender, _msgSender(), currentAllowance - amount);
+ 
 
         return true;
     }
@@ -186,9 +186,9 @@ contract ERC20 is Context, IERC20,Ownable {
    function decreaseAllowance(address spender, uint256 subtractedValue) external virtual returns (bool) {
         uint256 currentAllowance = _allowances[_msgSender()][spender];
         require(currentAllowance >= subtractedValue, "ERC20: decreased allowance below zero");
-        unchecked {
+      
             _approve(_msgSender(), spender, currentAllowance - subtractedValue);
-        }
+    
 
         return true;
     }
